@@ -119,5 +119,63 @@
 
     response = requests.put(url, json=data, headers=headers)
 
+# MQTT Protocol Using Python 
+
+<h3>First, install the MQTT library for Python </h3>
+<p>You can do this using the following command </p>
+
+    pip install paho-mqtt
+
+## MQTT Local Broker
+
+<p>Creating a simple MQTT local broker</p>
+   
+    import paho.mqtt.server as mqtt
+
+    def on_connect(client, userdata, flags, rc):
+        print(f"Connected with result code {rc}")
+
+    def on_message(client, userdata, msg):
+        print(f"Received message: {msg.payload.decode()}")
+
+    broker = mqtt.Mosquitto()
+    broker.on_connect = on_connect
+    broker.on_message = on_message
+
+    broker.listen("localhost", 1883)
+    broker.loop_start()
+
+## MQTT Publisher 
+
+<p>Creating a simple MQTT Publisher </p>
+    
+    import paho.mqtt.publish as publish
+
+    topic = "test/topic"    
+    message = "Hello, MQTT!"
+
+    publish.single(topic, message, hostname="localhost")
+
+## MQTT Client / Subscriber
+
+<p>Creating a simple MQTT Subscriber </p>
+
+    import paho.mqtt.client as mqtt
+
+    def on_connect(client, userdata, flags, rc):
+        print(f"Connected with result code {rc}")
+        client.subscribe("test/topic")
+
+    def on_message(client, userdata, msg):
+        print(f"Received message: {msg.payload.decode()}")
+
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    client.connect("localhost", 1883, 60)
+    client.loop_forever()
+
+
 
 
